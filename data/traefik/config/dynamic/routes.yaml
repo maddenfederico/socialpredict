@@ -1,0 +1,15 @@
+http:
+  routers:
+    social-predict:
+      rule: "Host(`willalexgetathirddate.com`)"
+      entrypoints:
+        - websecure
+      service: social-predict
+      tls:
+        certResolver: letsencrypt
+  
+  services:
+    social-predict:
+      loadBalancer:
+        servers:
+          - url: "http://socialpredict-nginx-container:80"
