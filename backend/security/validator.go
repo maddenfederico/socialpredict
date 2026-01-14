@@ -68,7 +68,7 @@ func getFieldErrorMessage(fe validator.FieldError) string {
 	case "username":
 		return "username must only contain lowercase letters and numbers"
 	case "strong_password":
-		return "password must be at least 8 characters with uppercase, lowercase, and digit"
+		return "password must be at least 8 characters"
 	case "safe_string":
 		return fmt.Sprintf("%s contains potentially dangerous content", field)
 	case "market_outcome":
@@ -107,19 +107,16 @@ func validateStrongPassword(fl validator.FieldLevel) bool {
 		return false
 	}
 
-	var hasUpper, hasLower, hasDigit bool
+	// Only check for lowercase letters (removed uppercase and digit requirements)
+	var hasLower bool
 	for _, char := range password {
-		switch {
-		case char >= 'A' && char <= 'Z':
-			hasUpper = true
-		case char >= 'a' && char <= 'z':
+		if char >= 'a' && char <= 'z' {
 			hasLower = true
-		case char >= '0' && char <= '9':
-			hasDigit = true
+			break
 		}
 	}
 
-	return hasUpper && hasLower && hasDigit
+	return hasLower
 }
 
 // validateSafeString checks for potentially dangerous content
